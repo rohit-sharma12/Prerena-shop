@@ -73,60 +73,72 @@ const products = [
 
 const ProductGrid = () => {
     return (
-        <div className="px-2 py-5 bg-white">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="px-4 py-10 bg-gray-50">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {products.map((product) => (
-                    <Link key={product.id} to={`/product/${product.id}`} className='block'>
-                        <div className="border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
-                            {/* Image section */}
-                            <div className="relative overflow-hidden ">
-                                <img
-                                    src={product.img}
-                                    alt={product.name}
-                                    className="w-full h-[400px] object-cover transform transition-transform duration-700 group-hover:scale-105"
-                                />
+                    <Link
+                        key={product.id}
+                        to={`/product/${product.id}`}
+                        className="group relative block bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
+                    >
+                        {/* Image Section */}
+                        <div className="relative">
+                            <img
+                                src={product.img}
+                                alt={product.name}
+                                className="w-full h-[350px] object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
 
-                                {/* Tags */}
-                                <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">
-                                    {product.tag && (
-                                        <span className="bg-white text-gray-700 text-xs font-semibold px-2 py-1 border rounded">
-                                            {product.tag}
-                                        </span>
-                                    )}
-                                    {product.extra && (
-                                        <span className="bg-white text-pink-600 text-xs font-semibold px-2 py-1 border rounded">
-                                            {product.extra}
-                                        </span>
-                                    )}
-                                </div>
+                            {/* Overlay */}
+                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-500">
+                                <span className="bg-white text-gray-900 font-medium px-4 py-2 rounded-full text-sm">
+                                    View Details
+                                </span>
                             </div>
 
-                            {/* Details section */}
-                            <div className="p-4">
-                                <h3 className="text-sm font-medium text-gray-800 mb-1 truncate">
-                                    {product.name}
-                                </h3>
-
-                                <div className="flex items-center text-yellow-500 text-sm mb-1">
-                                    {"★".repeat(Math.floor(product.rating))}
-                                    {product.rating % 1 !== 0 ? "½" : ""}
-                                    <span className="text-gray-600 ml-2">{product.reviews} reviews</span>
-                                </div>
-
-                                <div className="flex items-center space-x-2">
-                                    <span className="text-gray-400 line-through text-sm">
-                                        ₹{product.originalPrice.toLocaleString()}
+                            {/* Tags */}
+                            <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                                {product.tag && (
+                                    <span className="bg-white/90 text-gray-700 text-xs font-semibold px-2 py-1 rounded">
+                                        {product.tag}
                                     </span>
-                                    <span className="text-gray-900 font-semibold">
-                                        ₹{product.discountedPrice.toLocaleString()}
+                                )}
+                                {product.extra && (
+                                    <span className="bg-pink-100 text-pink-700 text-xs font-semibold px-2 py-1 rounded">
+                                        {product.extra}
                                     </span>
-                                    <span className="text-pink-600 text-sm font-medium">{product.discount}</span>
-                                </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Details Section */}
+                        <div className="p-4">
+                            <h3 className="text-sm font-medium text-gray-800 mb-1 line-clamp-1">
+                                {product.name}
+                            </h3>
+
+                            <div className="flex items-center text-yellow-500 text-sm mb-1">
+                                {"★".repeat(Math.floor(product.rating))}
+                                {product.rating % 1 !== 0 ? "½" : ""}
+                                <span className="text-gray-500 ml-2 text-xs">
+                                    ({product.reviews} reviews)
+                                </span>
+                            </div>
+
+                            <div className="flex items-center space-x-2">
+                                <span className="text-gray-400 line-through text-sm">
+                                    ₹{product.originalPrice.toLocaleString()}
+                                </span>
+                                <span className="text-gray-900 font-semibold">
+                                    ₹{product.discountedPrice.toLocaleString()}
+                                </span>
+                                <span className="text-pink-600 text-xs font-medium">
+                                    {product.discount}
+                                </span>
                             </div>
                         </div>
                     </Link>
                 ))}
-
             </div>
         </div>
     );

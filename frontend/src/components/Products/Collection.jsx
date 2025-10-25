@@ -147,39 +147,34 @@ const Collection = () => {
                 {collections.map((product) => (
                     <Link key={product.id} to={`/product/${product.id}`} className='block'>
                         <div
-                            className="group border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 relative"
+                            className="group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 relative"
                         >
-                            {/* Image Section */}
+                         
                             <div className="relative overflow-hidden">
                                 <img
                                     src={product.img}
                                     alt={product.name}
                                     className="w-full h-[420px] object-cover transform transition-transform duration-700 group-hover:scale-105"
                                 />
-                                <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow hover:text-pink-600">
-                                    <Heart size={20} />
-                                </button>
 
-                                {/* Tag */}
                                 <div className="absolute bottom-3 left-3">
                                     <span className="bg-white text-gray-800 text-xs font-semibold px-2 py-1 border rounded">
                                         {product.tag}
                                     </span>
                                 </div>
 
-                                {/* Hover “Quick View” overlay */}
+                               
                                 <div className="absolute bottom-0 left-0 w-full bg-red-600 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 cursor-pointer">
                                     Quick view
                                 </div>
                             </div>
 
-                            {/* Product Details */}
                             <div className="p-4">
                                 <h3 className="text-sm font-medium text-gray-800 truncate mb-1">
                                     {product.name}
                                 </h3>
 
-                                {/* Rating */}
+                               
                                 <div className="flex items-center text-yellow-500 text-sm mb-1">
                                     {"★".repeat(Math.floor(product.rating))}
                                     {product.rating % 1 !== 0 ? "½" : ""}
@@ -188,7 +183,6 @@ const Collection = () => {
                                     </span>
                                 </div>
 
-                                {/* Price */}
                                 <div className="flex items-center space-x-2">
                                     <span className="text-gray-400 line-through text-sm">
                                         ₹{product.originalPrice.toLocaleString()}

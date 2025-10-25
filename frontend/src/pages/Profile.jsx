@@ -65,10 +65,10 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen py-10 px-6 md:px-16 bg-gradient-to-br from-rose-50 via-pink-50 to-white">
+        <div className="min-h-screen py-10 px-6 md:px-16 ">
             {/* Profile Header */}
             <div className="max-w-5xl mx-auto bg-white/80 backdrop-blur-md shadow-lg border border-rose-100 rounded-3xl p-8 mb-10">
-                <h1 className="text-3xl font-semibold text-rose-600 mb-3">My Profile</h1>
+                <h1 className="text-3xl font-semibold text-black mb-3">My Profile</h1>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h2 className="text-xl font-medium text-gray-800">Isha Sharma</h2>
@@ -77,7 +77,7 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className="mt-4 sm:mt-0">
-                        <button className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-xl shadow-md transition-all duration-300">
+                        <button className="bg-red-500 hover:bg-rose-600 text-white px-6 py-2 rounded-xl shadow-md transition-all duration-300">
                             Logout
                         </button>
                     </div>
@@ -87,7 +87,7 @@ const Profile = () => {
             {/* Orders Section */}
             <div className="max-w-5xl mx-auto bg-white/80 backdrop-blur-md shadow-lg border border-rose-100 rounded-3xl p-5">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
-                    <Package className="text-rose-500 mr-2" /> My Orders
+                    <Package className="text-black mr-2" /> My Orders
                 </h2>
 
                 <div className="space-y-6">
