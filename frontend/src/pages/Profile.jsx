@@ -1,8 +1,10 @@
 import { Package, Clock, CheckCircle, Truck, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
     const [orders, setOrders] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         setTimeout(() => {
@@ -64,6 +66,9 @@ const Profile = () => {
         }
     };
 
+    const handleRowClick = (orderId) => {
+        navigate(`/order/${orderId}`)
+    }
     return (
         <div className="min-h-screen py-10 px-6 md:px-16 ">
             {/* Profile Header */}
@@ -95,6 +100,7 @@ const Profile = () => {
                         orders.map((order) => (
                             <div
                                 key={order.id}
+                                onClick={() => handleRowClick(order.id)}
                                 className="flex flex-col md:flex-row items-center justify-between border-b border-gray-100 pb-4 last:border-none"
                             >
                                 <div className="flex items-center space-x-4 w-full md:w-1/2">
@@ -111,7 +117,7 @@ const Profile = () => {
                                             <Clock size={14} /> {new Date(order.createdAt).toLocaleTimeString()}
                                         </div>
                                     </div>
-                                   
+
                                 </div>
 
                                 <div className="mt-3 md:mt-0 flex items-center justify-between w-full md:w-1/3">

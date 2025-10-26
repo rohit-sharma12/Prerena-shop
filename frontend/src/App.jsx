@@ -9,6 +9,12 @@ import ProductCollection from '../src/pages/ProductCollection';
 import ProductDetails from './components/Products/ProductDetails';
 import Checkout from './components/Cart/Checkout';
 import OrderConfirmations from './pages/OrderConfirmations';
+import OrderDetails from './pages/OrderDetails';
+import AdminLayout from './components/Admin/AdminLayout';
+import AdminHomePage from './pages/AdminHomePage';
+import UserManagement from './components/Admin/UserManagement';
+import ProductManagement from './components/Admin/ProductManagement';
+import EditProductPage from './components/Admin/EditProductPage';
 
 function App() {
   return (
@@ -24,6 +30,13 @@ function App() {
           <Route path='product/:id' element={<ProductDetails />} />
           <Route path='checkout' element={<Checkout />} />
           <Route path='order-confirmation' element={<OrderConfirmations />} />
+          <Route path='order/:id' element={<OrderDetails />} />
+        </Route>
+        <Route path='/admin' element={<AdminLayout />}>
+          <Route index element={<AdminHomePage />} />
+          <Route path='users' element={<UserManagement />} />
+          <Route path='products' element={<ProductManagement />} />
+          <Route path='products/:id/edit' element={<EditProductPage />} />
         </Route>
         <Route />
       </Routes>

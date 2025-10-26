@@ -22,7 +22,7 @@ const Navbar = () => {
     return (
         <>
             <nav className="bg-white border border-gray-300 shadow-md w-full z-50 rounded-b-xl">
-                <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-8xl mx-auto px-2 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         {/* 🔹 Logo */}
                         <Link
@@ -32,7 +32,7 @@ const Navbar = () => {
                             Prerna
                             <span className="text-gray-800 font-semibold">
                                 {" "}
-                              Ethnic Wear
+                                Ethnic Wear
                             </span>
                         </Link>
 
@@ -51,6 +51,12 @@ const Navbar = () => {
 
                         {/* 🔹 Right Icons (Always visible) */}
                         <div className="flex items-center space-x-3 sm:space-x-5">
+                            <Link
+                                to="/admin"
+                                className="block bg-black px-2 py-2 rounded text-sm text-white"
+                            >
+                                Admin
+                            </Link>
                             <Link
                                 to="/profile"
                                 className="text-gray-700 hover:text-indigo-600 transition"

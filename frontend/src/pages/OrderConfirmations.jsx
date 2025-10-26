@@ -69,6 +69,19 @@ const OrderConfirmations = () => {
                             </div>
                         ))}
                     </div>
+
+                    <div className="grid grid-cols-2 gap-8 font-bold">
+                        <div>
+                            <h4 className="text-lg font-semibold mb-2">Payment</h4>
+                            <p className="text-gray-600">Cash on Delivery</p>
+                        </div>
+                        
+                        <div>
+                            <h4 className="text-lg font-semibold mb-2">Delivery</h4>
+                            <p className="text-gray-600">{checkout.shippingAddress.address}</p>
+                            <p className="text-gray-600">{checkout.shippingAddress.city}</p>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
