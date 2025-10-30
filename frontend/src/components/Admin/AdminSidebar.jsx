@@ -16,7 +16,7 @@ const AdminSidebar = () => {
         { name: "Products", path: "/admin/products", icon: ShoppingBag },
         { name: "Orders", path: "/admin/orders", icon: Package },
         { name: "Users", path: "/admin/users", icon: Users },
-        { name: "Shops", path: "/admin/shops", icon: Store },
+        { name: "Shops", path: "/", icon: Store },
     ];
 
     const handleLogout = () => {
