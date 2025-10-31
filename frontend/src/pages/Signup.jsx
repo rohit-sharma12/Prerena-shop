@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
+import { signupUser } from "../redux/slice/authSlice"; import { useDispatch } from "react-redux";
 
 const Signup = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-
+    const dispatch = useDispatch();
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log({ name, email, password });
+        dispatch(signupUser({ name, email, password }));
     };
     return (
         <div className="flex h-screen">
