@@ -2,22 +2,21 @@ const express = require("express");
 const Order = require("../models/Order");
 const { protect, admin } = require("../middleware/authMiddleware");
 
-
 const router = express.Router();
 
 router.get("/", protect, admin, async (req, res) => {
     try {
-        const orders = await Order.find({}).populate("user", "name email");
+        const orders = await Order.find({}).populate("user", "name email").sort({ createdAt: -1 });;
         res.json(orders);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error" })
     }
-})
+});
 
 router.put("/:id", protect, admin, async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id);
+        const order = await Order.findById(req.params.id).populate("user", "name");
         if (order) {
             order.status = req.body.status || order.status;
             order.isDelivered = req.body.status === "Delivered" ? true : order.isDelivered;
@@ -32,7 +31,7 @@ router.put("/:id", protect, admin, async (req, res) => {
         console.error(error);
         res.status(500).json({ message: "Server Error" })
     }
-})
+});
 
 //delete order
 router.delete("/:id", protect, admin, async (req, res) => {

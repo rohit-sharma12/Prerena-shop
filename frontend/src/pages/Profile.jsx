@@ -1,57 +1,32 @@
 import { Package, Clock, CheckCircle, Truck, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../redux/slice/authSlice";
+import { clearCart } from "../redux/slice/cartSlice";
+import { fetchUserOrders } from "../redux/slice/orderSlice";
 
 const Profile = () => {
-    const [orders, setOrders] = useState([]);
+    const { user } = useSelector((state) => state.auth);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { orders, loading, error } = useSelector((state) => state.orders);
 
     useEffect(() => {
-        setTimeout(() => {
-            const orders = [
-                {
-                    id: '1323',
-                    shippingAddress: { city: "Delhi", street: "MG Road", nearfamous: "Hansraj Dairy", zipCode: 110053 },
-                    orderItem: [
-                        {
-                            name: "Blush Aari Work Anarkali Suit",
-                            image: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-                        },
-                    ],
-                    createdAt: new Date(),
-                    totalPrice: 5499,
-                    status: "Delivered",
-                },
-                {
-                    id: '7823',
-                    shippingAddress: { city: "Delhi", street: "Ring Road", nearfamous: "Lotus Mall", zipCode: 110052 },
-                    orderItem: [
-                        {
-                            name: "Amber Brown Umbrella Suit",
-                            image: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-                        },
-                    ],
-                    createdAt: new Date(),
-                    totalPrice: 3299,
-                    status: "Shipped",
-                },
-                {
-                    id: '5973',
-                    shippingAddress: { city: "Delhi", street: "street no.4", nearfamous: "Caunat Place", zipCode: 110032 },
-                    orderItem: [
-                        {
-                            name: "Amber Brown Umbrella Suit",
-                            image: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-                        },
-                    ],
-                    createdAt: new Date(),
-                    totalPrice: 3299,
-                    status: "Shipped",
-                },
-            ];
-            setOrders(orders);
-        }, 1000);
-    }, []);
+        dispatch(fetchUserOrders());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/login");
+        }
+    }, [user, navigate]);
+
+    const handleLogout = () => {
+        dispatch(logout());
+        dispatch(clearCart());
+        navigate("/login");
+    };
 
     const getStatusIcon = (status) => {
         switch (status) {
@@ -67,8 +42,24 @@ const Profile = () => {
     };
 
     const handleRowClick = (orderId) => {
-        navigate(`/order/${orderId}`)
-    }
+        navigate(`/orders/${orderId}`);
+    };
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+
+    // Flatten all order items for display
+    const flattenedOrders = orders?.flatMap(order =>
+        order.orderItems.map((item) => ({
+            ...item,
+            orderId: order._id,
+            status: order.status,
+            totalPrice: order.totalPrice,
+            createdAt: order.createdAt,
+            shippingAddress: order.shippingAddress,
+        }))
+    );
+
     return (
         <div className="min-h-screen py-10 px-6 md:px-16 ">
             {/* Profile Header */}
@@ -76,13 +67,14 @@ const Profile = () => {
                 <h1 className="text-3xl font-semibold text-black mb-3">My Profile</h1>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h2 className="text-xl font-medium text-gray-800">Isha Sharma</h2>
-                        <div className="flex items-center text-gray-600 mt-1">
-                            rohit12@gmail.com
-                        </div>
+                        <h2 className="text-xl font-medium text-gray-800">{user?.name}</h2>
+                        <div className="flex items-center text-gray-600 mt-1">{user?.email}</div>
                     </div>
                     <div className="mt-4 sm:mt-0">
-                        <button className="bg-red-500 hover:bg-rose-600 text-white px-6 py-2 rounded-xl shadow-md transition-all duration-300">
+                        <button
+                            onClick={handleLogout}
+                            className="bg-red-500 hover:bg-rose-600 text-white px-6 py-2 rounded-xl shadow-md transition-all duration-300"
+                        >
                             Logout
                         </button>
                     </div>
@@ -96,61 +88,56 @@ const Profile = () => {
                 </h2>
 
                 <div className="space-y-6">
-                    {orders.length > 0 ? (
-                        orders.map((order) => (
+                    {flattenedOrders?.length > 0 ? (
+                        flattenedOrders.map((item, index) => (
                             <div
-                                key={order.id}
-                                onClick={() => handleRowClick(order.id)}
-                                className="flex flex-col md:flex-row items-center justify-between border-b border-gray-100 pb-4 last:border-none"
+                                key={index}
+                                onClick={() => handleRowClick(item.orderId)}
+                                className="flex flex-col md:flex-row items-center justify-between border-b border-gray-100 pb-4 last:border-none cursor-pointer"
                             >
                                 <div className="flex items-center space-x-4 w-full md:w-1/2">
                                     <img
-                                        src={order.orderItem[0].image}
-                                        alt={order.orderItem[0].name}
+                                        src={item.image}
+                                        alt={item.name}
                                         className="w-20 h-24 object-cover rounded-lg shadow-sm"
                                     />
                                     <div>
-                                        <h3 className="font-medium text-gray-800">{order.orderItem[0].name}</h3>
-                                        <div className="text-black text-sm ">#{order.id}</div>
+                                        <h3 className="font-medium text-gray-800">{item.name}</h3>
+                                        <div className="text-black text-sm ">#{item?.orderId}</div>
                                         <div className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-                                            {new Date(order.createdAt).toLocaleDateString()}{" "}
-                                            <Clock size={14} /> {new Date(order.createdAt).toLocaleTimeString()}
+                                            {new Date(item.createdAt).toLocaleDateString()}{" "}
+                                            <Clock size={14} /> {new Date(item.createdAt).toLocaleTimeString()}
                                         </div>
                                     </div>
-
                                 </div>
 
                                 <div className="mt-3 md:mt-0 flex items-center justify-between w-full md:w-1/3">
                                     <div className="text-right md:text-center">
-                                        <p className="text-gray-700 font-semibold">₹{order.totalPrice}</p>
+                                        <p className="text-gray-700 font-semibold">₹{item.totalPrice}</p>
                                     </div>
                                     <div className="flex items-center space-x-3">
-                                        {getStatusIcon(order.status)}
+                                        {getStatusIcon(item.status)}
                                         <span
-                                            className={`font-medium text-sm ${order.status === "Delivered"
-                                                ? "text-green-600"
-                                                : order.status === "Shipped"
-                                                    ? "text-blue-600"
-                                                    : order.status === "Cancelled"
-                                                        ? "text-red-600"
-                                                        : "text-gray-500"
+                                            className={`font-medium text-sm ${item.status === "Delivered"
+                                                    ? "text-green-600"
+                                                    : item.status === "Shipped"
+                                                        ? "text-blue-600"
+                                                        : item.status === "Cancelled"
+                                                            ? "text-red-600"
+                                                            : "text-gray-500"
                                                 }`}
                                         >
-                                            {order.status}
+                                            {item.status}
                                         </span>
                                     </div>
                                     <div className="mt-3 bg-rose-50 p-3 rounded-xl">
                                         <p className="text-gray-700 text-sm">
-
-                                            {order.shippingAddress ? `${order.shippingAddress.city}, ${order.shippingAddress.nearfamous}` : "NA"}
+                                            {item.shippingAddress ? `${item.shippingAddress.city}` : "NA"}
                                         </p>
-
                                     </div>
                                 </div>
-
                             </div>
                         ))
-
                     ) : (
                         <div className="py-4 px-4 text-center text-gray-500">You have no orders</div>
                     )}

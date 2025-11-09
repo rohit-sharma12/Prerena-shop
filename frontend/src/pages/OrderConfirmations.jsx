@@ -1,39 +1,28 @@
-const checkout = {
-    id: "12332",
-    createdAt: new Date(),
-    checkoutItems: [
-        {
-            productId: 1,
-            name: "Jaipuri saree",
-            color: "red",
-            size: "M",
-            price: 1500,
-            quantity: 1,
-            image: "https://picsum.photos/150?random=1",
-        },
-        {
-            productId: 2,
-            name: "Jaipuri Suit",
-            color: "yellow",
-            size: "XL",
-            price: 1000,
-            quantity: 1,
-            image: "https://picsum.photos/150?random=2",
-        },
-    ],
-    shippingAddress: {
-        address: "123 Fashion Street",
-        city: "Delhi",
-        pinCode: 110053,
-    },
-};
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../redux/slice/cartSlice";
 
 const OrderConfirmations = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { checkout } = useSelector((state) => state.checkout);
+
+    useEffect(() => {
+        if (checkout && checkout._id) {
+            dispatch(clearCart());
+            localStorage.removeItem("cart");
+        } else {
+            navigate("/profile")
+        }
+    }, [checkout, dispatch, navigate]);
+
     const CalculateEstimatedDelivey = (createdAt) => {
         const orderDate = new Date(createdAt);
         orderDate.setDate(orderDate.getDate() + 5);
         return orderDate.toLocaleDateString();
-    }
+    };
+
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white">
             <h1 className="text-4xl font-bold text-center text-emerald-700 mb-8">
@@ -43,7 +32,7 @@ const OrderConfirmations = () => {
                 <div className="p-6 rounded-lg border">
                     <div className="flex justify-between mb-20">
                         <div>
-                            <h2 className="text-xl font-semibold">Order ID: {checkout.id}</h2>
+                            <h2 className="text-xl font-semibold">Order ID: {checkout._id}</h2>
                             <p className="text-grsy-500">Order Date: {new Date(checkout.createdAt).toLocaleDateString()}</p>
                         </div>
 
@@ -62,7 +51,7 @@ const OrderConfirmations = () => {
                                 </div>
                                 <div className="ml-auto text-right">
                                     <p className="texxt-md">
-                                        ${item.price}
+                                        Rs. {item.price}
                                     </p>
                                     <p className="text-sm text-gray-500">{item.quantity}</p>
                                 </div>
@@ -73,9 +62,9 @@ const OrderConfirmations = () => {
                     <div className="grid grid-cols-2 gap-8 font-bold">
                         <div>
                             <h4 className="text-lg font-semibold mb-2">Payment</h4>
-                            <p className="text-gray-600">Cash on Delivery</p>
+                            <p className="text-gray-600">PayPal</p>
                         </div>
-                        
+
                         <div>
                             <h4 className="text-lg font-semibold mb-2">Delivery</h4>
                             <p className="text-gray-600">{checkout.shippingAddress.address}</p>

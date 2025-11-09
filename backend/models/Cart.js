@@ -15,9 +15,7 @@ const cartItemSchema = new mongoose.Schema({
         type: Number,
         default: 1,
     },
-},
-    { id: false }
-);
+}, { _id: false });
 
 const cartSchema = new mongoose.Schema({
     user: {
@@ -35,6 +33,6 @@ const cartSchema = new mongoose.Schema({
     },
 },
     { timestamps: true }
-)
+);
 
 module.exports = mongoose.model("Cart", cartSchema);

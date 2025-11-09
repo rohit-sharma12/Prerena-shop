@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
-import { signupUser } from "../redux/slice/authSlice"; import { useDispatch } from "react-redux";
+import { Link, useNavigate,useLocation } from "react-router-dom";
+import { signupUser } from "../redux/slice/authSlice"; 
+import { useDispatch, useSelector } from "react-redux";
+import { mergeCart } from "../redux/slice/cartSlice";
 
 const Signup = () => {
     const [name, setName] = useState("");
@@ -9,6 +11,28 @@ const Signup = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { user, guestId } = useSelector((state) => state.auth);
+    const { cart } = useSelector((state) => state.cart);
+
+
+    const redirect = new URLSearchParams(location.search).get("redirect") || "/";
+    const isCheckoutRedirect = redirect.includes("checkout");
+
+    useEffect(() => {
+        if (user) {
+            if (cart?.products.length > 0 && guestId) {
+                dispatch(mergeCart({ guestId, user })).then(() => {
+                    navigate(isCheckoutRedirect ? "/checkout" : "/");
+                })
+            } else {
+                navigate(isCheckoutRedirect ? "/checkout" : "/");
+            }
+        }
+    })
+
     const handleSubmit = (e) => {
         e.preventDefault();
         dispatch(signupUser({ name, email, password }));
@@ -83,7 +107,7 @@ const Signup = () => {
 
                     <p className="text-center text-gray-600 text-sm mt-6">
                         Already have an account.{" "}
-                        <Link to="/login" className="text-red-500 font-medium hover:underline">
+                        <Link to={`/login?redidrect=${encodeURIComponent(redirect)}`} className="text-red-500 font-medium hover:underline">
                             Login
                         </Link>
                     </p>

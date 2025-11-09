@@ -20,10 +20,12 @@ const checkoutItemSchema = new mongoose.Schema({
     },
     quantity: {
         type: Number,
-        required:true,
-    }
+        required: true,
+    },
+    size: String,
+    color: String,
 },
-    { id: false }
+    { _id: false }
 );
 
 const checkoutSchema = new mongoose.Schema({
@@ -32,7 +34,17 @@ const checkoutSchema = new mongoose.Schema({
         ref: "User",
         required: true,
     },
-    checkoutItems: [checkoutItemSchema],
+    checkoutItems: [
+        {
+            productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+            name: String,
+            image: String,
+            price: Number,
+            quantity: Number,
+            size: String,
+            color:String,
+        },
+    ],
     shippingAddress: {
         address: { type: String, required: true },
         city: { type: String, required: true },
@@ -57,7 +69,7 @@ const checkoutSchema = new mongoose.Schema({
         type: String,
         default: "pending",
     },
-   
+
     paymentDetails: {
         type: mongoose.Schema.Types.Mixed,
     },

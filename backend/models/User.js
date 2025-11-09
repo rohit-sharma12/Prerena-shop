@@ -29,7 +29,7 @@ const useSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-//Password Hasj middleware
+//Password Hash middleware
 useSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
     const salt = await bcrypt.genSalt(10);

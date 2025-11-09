@@ -30,7 +30,7 @@ export const createProduct = createAsyncThunk("adminProducts/createProduct", asy
 });
 
 export const updateProduct = createAsyncThunk("adminProducts/updateProduct", async ({ id, productData }) => {
-    const response = await axios.put(`${API_URL}/admin/products/${id}`, productData,
+    const response = await axios.put(`${API_URL}/api/products/${id}`, productData,
         {
             headers: {
                 Authorization: USER_TOKEN,
@@ -40,14 +40,55 @@ export const updateProduct = createAsyncThunk("adminProducts/updateProduct", asy
     return response.data;
 })
 
-export const deleteProduct = createAsyncThunk("adminProducts/deleteProduct", async ({ id }) => {
-    await axios.delete(`${API_URL}/admin/products/${id}`,
+export const deleteProduct = createAsyncThunk("adminProducts/deleteProduct", async (id) => {
+    await axios.delete(`${API_URL}/api/admin/products/${id}`,
         {
-            headers: {
-                Authorization: USER_TOKEN,
-            }
+            headers: {Authorization: USER_TOKEN},
         }
     )
     return id;
+});
+
+const adminProductSlice = createSlice({
+    name: "adminProducts",
+    initialState: {
+        products: [],
+        loading: false,
+        error: null,
+    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchAdminProducts.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchAdminProducts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products = action.payload;
+            })
+            .addCase(fetchAdminProducts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+
+            .addCase(createProduct.fulfilled, (state, action) => {
+                state.products.push(action.payload);
+            })
+            .addCase(updateProduct.fulfilled, (state, action) => {
+                const index = state.products.findIndex(
+                    (product) => product._id === action.payload._id
+                );
+                if (index !== -1) {
+                    state.products[index] = action.payload;
+                }
+            })
+
+            .addCase(deleteProduct.fulfilled, (state, action) => {
+                state.products = state.products.filter(
+                    (product) => product._id !== action.payload
+                );
+            })
+    }
 })
 
+export default adminProductSlice.reducer;

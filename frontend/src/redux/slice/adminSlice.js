@@ -6,25 +6,25 @@ export const fetchUsers = createAsyncThunk("admin/fetchUsers", async () => {
     const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/admin/users`,
         {
-            headers: { Authorization: `Bearer ${localStorage.getItem("userTOken")}` },
+            headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
         }
     );
     return response.data;
 })
 
 //Add the create user action
-export const addUser = createAsyncThunk("admin/addUser", async (userData, { rejectWithVaalue }) => {
+export const addUser = createAsyncThunk("admin/addUser", async (userData, { rejectWithValue }) => {
     try {
-        const response = await axios.get(
+        const response = await axios.post(
             `${import.meta.env.VITE_BACKEND_URL}/api/admin/users`,
             userData,
             {
-                headers: { Authorization: `Bearer ${localStorage.getItem("userTOken")}` },
+                headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
             }
         );
         return response.data;
     } catch (error) {
-        return rejectWithVaalue(error.response.data);
+        return rejectWithValue(error.response.data);
     }
 });
 
@@ -63,7 +63,7 @@ const adminSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(deleteUser.fulfilled, (state, action) => {
-                state.users = state.users.filter((user) => user.id !== action.payload);
+                state.users = state.users.filter((user) => user._id !== action.payload);
             })
             .addCase(addUser.pending, (state) => {
                 state.loading = true;
@@ -71,11 +71,11 @@ const adminSlice = createSlice({
             })
             .addCase(addUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.users = (action.payload.user);
+                state.users.push(action.payload.user);
             })
             .addCase(addUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message;
+                state.error = action.payload.message;
             })
     },
 });

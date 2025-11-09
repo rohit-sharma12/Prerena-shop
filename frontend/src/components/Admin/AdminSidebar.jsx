@@ -1,5 +1,4 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import {
     ShoppingBag,
     Users,
@@ -7,11 +6,14 @@ import {
     Store,
     LogOut,
 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/slice/authSlice";
+import { clearCart } from "../../redux/slice/cartSlice";
 
 const AdminSidebar = () => {
     const location = useLocation();
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     const menuItems = [
         { name: "Products", path: "/admin/products", icon: ShoppingBag },
         { name: "Orders", path: "/admin/orders", icon: Package },
@@ -20,6 +22,8 @@ const AdminSidebar = () => {
     ];
 
     const handleLogout = () => {
+        dispatch(logout());
+        dispatch(clearCart());
         navigate('/');
     }
     return (

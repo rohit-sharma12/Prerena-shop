@@ -1,14 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../redux/slice/authSlice"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { mergeCart } from "../redux/slice/cartSlice";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { user, guestId } = useSelector((state) => state.auth);
+    const { cart } = useSelector((state) => state.cart);
+
+
+    const redirect = new URLSearchParams(location.search).get("redirect") || "/";
+    const isCheckoutRedirect = redirect.includes("checkout");
+
+    useEffect(() => {
+        if (user) {
+            if (cart?.products.length > 0 && guestId) {
+                dispatch(mergeCart({ guestId, user })).then(() => {
+                    navigate(isCheckoutRedirect ? "/checkout" : "/");
+                })
+            } else {
+                navigate(isCheckoutRedirect ? "/checkout" : "/");
+            }
+        }
+    })
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -73,7 +94,7 @@ const Login = () => {
 
                     <p className="text-center text-gray-600 text-sm mt-6">
                         Don’t have an account?{" "}
-                        <Link to="/signup" className="text-red-500 font-medium hover:underline">
+                        <Link to={`/signup?redidrect=${encodeURIComponent(redirect)}`} className="text-red-500 font-medium hover:underline">
                             Sign up
                         </Link>
                     </p>

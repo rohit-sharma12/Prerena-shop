@@ -1,48 +1,32 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+    fetchAllOrders,
+    updateOrderStatus,
+} from "../../redux/slice/adminOrderSlice";
 
 const OrderManagement = () => {
-    const [orders, setOrders] = useState([
-        {
-            id: "#67540ced3376121b361a0ed0",
-            customer: "Isha Sharma",
-            total: "$199.96",
-            status: "Processing",
-        },
-        {
-            id: "#67540d3ca67b4a70e434e092",
-            customer: "Admin User",
-            total: "$40.00",
-            status: "Processing",
-        },
-        {
-            id: "#675bf2c6ca77bd83eefd7a18",
-            customer: "Admin User",
-            total: "$39.99",
-            status: "Processing",
-        },
-        {
-            id: "#675c24b09b88827304bd5cc1",
-            customer: "Admin User",
-            total: "$39.99",
-            status: "Processing",
-        },
-    ]);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const handleStatusChange = (id, newStatus) => {
-        setOrders((prev) =>
-            prev.map((order) =>
-                order.id === id ? { ...order, status: newStatus } : order
-            )
-        );
+    const { user } = useSelector((state) => state.auth);
+    const { orders, loading, error } = useSelector((state) => state.adminOrders);
+
+    useEffect(() => {
+        if (!user || user.role !== "admin") {
+            navigate("/");
+        } else {
+            dispatch(fetchAllOrders());
+        }
+    }, [dispatch, user, navigate]);
+
+    const handleStatusChange = (orderId, status) => {
+        dispatch(updateOrderStatus({ id: orderId, status }));
     };
 
-    const markAsDelivered = (id) => {
-        setOrders((prev) =>
-            prev.map((order) =>
-                order.id === id ? { ...order, status: "Delivered" } : order
-            )
-        );
-    };
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
@@ -68,53 +52,53 @@ const OrderManagement = () => {
                             {orders.length > 0 ? (
                                 orders.map((order) => (
                                     <tr
-                                        key={order.id}
+                                        key={order._id}
                                         className="border-b hover:bg-gray-50 transition"
                                     >
                                         <td className="px-6 py-4 font-mono text-xs text-gray-600">
-                                            {order.id}
+                                           #{order._id}
                                         </td>
-                                        <td className="px-6 py-4">{order.customer}</td>
-                                        <td className="px-6 py-4 font-semibold">{order.total}</td>
+                                        <td className="px-6 py-4">{order.user?.name}</td>
+                                        <td className="px-6 py-4 font-semibold">₹ {order?.totalPrice}</td>
                                         <td className="px-6 py-4">
                                             <select
                                                 value={order.status}
                                                 onChange={(e) =>
-                                                    handleStatusChange(order.id, e.target.value)
+                                                    handleStatusChange(order._id, e.target.value)
                                                 }
                                                 className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-pink-400"
                                             >
-                                                <option>Processing</option>
-                                                <option>Shipped</option>
-                                                <option>Delivered</option>
-                                                <option>Cancelled</option>
+                                                <option value="Processing">Processing</option>
+                                                <option value="Shipped">Shipped</option>
+                                                <option value="Delivered">Delivered</option>
+                                                <option value="Cancelled">Cancelled</option>
                                             </select>
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             <button
-                                                onClick={() => markAsDelivered(order.id)}
-                                                className={`px-4 py-1.5 rounded-md text-white text-sm font-medium transition ${order.status === "Delivered"
-                                                    ? "bg-green-400 cursor-not-allowed"
-                                                    : "bg-green-600 hover:bg-green-700"
-                                                    }`}
-                                                disabled={order.status === "Delivered"}
+                                                onClick={() => handleStatusChange(order._id, "Delivered")}
+                                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 cursor-pointer"
                                             >
-                                                {order.status === "Delivered"
-                                                    ? "Delivered"
-                                                    : "Mark as Delivered"}
+                                                Mark as Deliverd
                                             </button>
                                         </td>
                                     </tr>
                                 ))
-
                             ) : (
-                                <tr colSpan={5} className="p-4 text-center text-gray-500">No Orders found.</tr>
+                                <tr>
+                                    <td
+                                        colSpan={5}
+                                        className="p-4 text-center text-gray-500"
+                                    >
+                                        No Orders found.
+                                    </td>
+                                </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

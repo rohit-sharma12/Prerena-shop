@@ -1,19 +1,26 @@
-import { useState } from "react";
-import { Edit2, Trash2, PackagePlus, Search } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchAdminProducts } from "../../redux/slice/adminProductSlice";
+import { deleteProduct } from "../../redux/slice/adminProductSlice";
 
 const ProductManagement = () => {
-    const [products, setProducts] = useState([
-        { id: 1, name: "Blush Aari Work Anarkali Suit", price: 11249, sku: "ANR001" },
-        { id: 2, name: "Emerald Green Kurta Set", price: 9450, sku: "KRT002" },
-        { id: 3, name: "Ivory Cotton Saree", price: 7250, sku: "SAR003" },
-    ]);
+    const dispatch = useDispatch();
+    const { products, loading, error } = useSelector((state) => state.adminProducts);
+    
+    useEffect(() => {
+        dispatch(fetchAdminProducts());
+    }, [dispatch]);
 
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this product?")) {
-            setProducts(products.filter((p) => p.id !== id));
+            dispatch(deleteProduct(id));
         }
     };
+
+    if (loading) return <p>Loading...</p>
+    if (error) return <p>Error:{error}</p>
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
@@ -31,14 +38,14 @@ const ProductManagement = () => {
                         {products.length > 0 ? (
                             products.map((product) => (
                                 <tr
-                                    key={product.id}
+                                    key={product._id}
                                     className="hover:bg-gray-50 transition-all border-b"
                                 >
                                     <td className="py-3 px-4">{product.name}</td>
                                     <td className="py-3 px-4">₹{product.price.toLocaleString()}</td>
                                     <td className="py-3 px-4">{product.sku}</td>
                                     <td className="py-3 px-4 text-center space-x-3">
-                                        <Link to={`/admin/products/${product.id}/edit`}>
+                                        <Link to={`/admin/products/${product._id}/edit`}>
                                             <button
                                                 className="text-yellow-500 hover:text-yellow-700"
                                                 title="Edit"
@@ -47,7 +54,7 @@ const ProductManagement = () => {
                                             </button>
                                         </Link>
                                         <button
-                                            onClick={() => handleDelete(product.id)}
+                                            onClick={() => handleDelete(product._id)}
                                             className="text-red-500 hover:text-red-700"
                                             title="Delete"
                                         >

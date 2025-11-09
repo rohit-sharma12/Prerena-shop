@@ -3,11 +3,26 @@ import { FaFilter } from "react-icons/fa";
 import FilterSidebar from "../components/Products/FilterSidebar";
 import SortOptions from "../components/Products/SortOptions";
 import ProductGrid from "../components/Products/ProductGrid";
+import { useParams, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductsByFilters } from '../redux/slice/productsSlice';
 
 const ProductCollection = () => {
-    const [products, setProducts] = useState([]);
+    const { collection } = useParams();
+    const [searchParams] = useSearchParams();
+    const dispatch = useDispatch();
+    const { products, loading, error } = useSelector((state) => state.products);
+    const queryParams = Object.fromEntries([...searchParams]);
+
     const sidebarRef = useRef();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+
+    useEffect(() => {
+        dispatch(fetchProductsByFilters({ collection, ...queryParams }));
+        
+    }, [dispatch, collection, searchParams]);
+
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -22,57 +37,6 @@ const ProductCollection = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    useEffect(() => {
-        setTimeout(() => {
-            const fetchProducts = [
-                {
-                    id: 1,
-                    name: "AKILA CHIFFON SUIT SET",
-                    img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-                    rating: 4.5,
-                    reviews: 10,
-                    originalPrice: 7749,
-                    discountedPrice: 3749,
-                    discount: "52% off",
-                    tag: "BESTSELLER",
-                },
-                {
-                    id: 2,
-                    name: "ALLOY MIRRORWORK ANARKALI",
-                    img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8598.jpg?v=1752749712&width=540",
-                    rating: 4,
-                    reviews: 1,
-                    originalPrice: 6000,
-                    discountedPrice: 3499,
-                    discount: "42% off",
-                    tag: "EXTRA 20% OFF",
-                },
-                {
-                    id: 3,
-                    name: "AMBER BROWN UMBRELLA SUIT SET",
-                    img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8610.jpg?v=1752749712&width=540",
-                    rating: 4.5,
-                    reviews: 8,
-                    originalPrice: 6999,
-                    discountedPrice: 3299,
-                    discount: "53% off",
-                    tag: "EXTRA 20% OFF",
-                },
-                {
-                    id: 4,
-                    name: "AMMY BLOCK KURTA SET",
-                    img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8632.jpg?v=1752749712&width=540",
-                    rating: 4,
-                    reviews: 6,
-                    originalPrice: 4749,
-                    discountedPrice: 3499,
-                    discount: "26% off",
-                    tag: "EXTRA 20% OFF",
-                },
-            ];
-            setProducts(fetchProducts);
-        }, 1000);
-    }, []);
 
     return (
         <div className="min-h-screen flex flex-col lg:flex-row">
@@ -110,7 +74,7 @@ const ProductCollection = () => {
                 </div>
 
                 <div className="bg-white shadow-sm rounded-2xl p-4">
-                    <ProductGrid products={products} />
+                    <ProductGrid products={products} loading={loading} error={error} />
                 </div>
             </main>
 

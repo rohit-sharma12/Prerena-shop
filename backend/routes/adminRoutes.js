@@ -28,7 +28,7 @@ router.post("/", protect, admin, async (req, res) => {
             name,
             email,
             password,
-            role: role || "customer",
+            role: role?.toLowerCase() || "customer",
         });
         await user.save();
         res.status(201).json({ message: "User created successfullu", user })
@@ -48,7 +48,7 @@ router.delete("/:id", protect, admin, async (req, res) => {
             await user.deleteOne();
             res.json({ message: "User deleted successfully" })
         } else {
-            res.status(404).json({ message:"User not found" })
+            res.status(404).json({ message: "User not found" })
         }
     } catch (error) {
         console.error(error);

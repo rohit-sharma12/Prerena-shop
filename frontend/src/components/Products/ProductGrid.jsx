@@ -1,141 +1,105 @@
 import { Link } from "react-router-dom";
 
-const products = [
-    {
-        id: 1,
-        name: "BLUSH AARI WORK ANARKALI SUIT SET",
-        img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-        rating: 4,
-        reviews: 7,
-        originalPrice: 11249,
-        discountedPrice: 5499,
-        discount: "51% off",
-        tag: "BESTSELLER",
-    },
-    {
-        id: 2,
-        name: "BLUSH BLOSSOM ANARKALI SUIT SET",
-        img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-        rating: 4.5,
-        reviews: 7,
-        originalPrice: 7499,
-        discountedPrice: 2299,
-        discount: "69% off",
-        tag: "BESTSELLER",
-        extra: "EXTRA 20% OFF",
-    },
-    {
-        id: 3,
-        name: "BLUSH GROVE PRINTED SUIT SET",
-        img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-        rating: 4,
-        reviews: 7,
-        originalPrice: 4749,
-        discountedPrice: 2599,
-        discount: "45% off",
-        extra: "EXTRA 20% OFF",
-    },
-    {
-        id: 4,
-        name: "BLUSH AARI WORK ANARKALI SUIT SET",
-        img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-        rating: 4,
-        reviews: 7,
-        originalPrice: 11249,
-        discountedPrice: 5499,
-        discount: "51% off",
-        tag: "BESTSELLER",
-    },
-    {
-        id: 5,
-        name: "BLUSH BLOSSOM ANARKALI SUIT SET",
-        img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-        rating: 4.5,
-        reviews: 7,
-        originalPrice: 7499,
-        discountedPrice: 2299,
-        discount: "69% off",
-        tag: "BESTSELLER",
-        extra: "EXTRA 20% OFF",
-    },
-    {
-        id: 6,
-        name: "BLUSH GROVE PRINTED SUIT SET",
-        img: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8556.jpg?v=1752749712&width=540",
-        rating: 4,
-        reviews: 7,
-        originalPrice: 4749,
-        discountedPrice: 2599,
-        discount: "45% off",
-        extra: "EXTRA 20% OFF",
-    },
-];
+const Collection = ({ products = [], loading, error }) => {
+    if (loading) return <p className="text-center py-8 text-gray-500">Loading collections...</p>;
+    if (error) return <p className="text-center py-8 text-red-500">Error: {error}</p>;
+    if (!products.length)
+        return <p className="text-center py-8 text-gray-500">No products available</p>;
 
-const ProductGrid = () => {
     return (
-        <div className="px-4 py-10 bg-gray-50">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {products.map((product) => (
+        <div className="px-2 sm:px-5 lg:px-12 py-10 bg-gray-50">
+            <h2 className="text-2xl font-bold text-gray-800 mb-8 text-center">
+                New Collections
+            </h2>
+
+            {/* ✅ Two per row on mobile */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                {products.map((product, index) => (
                     <Link
-                        key={product.id}
-                        to={`/product/${product.id}`}
+                        key={product._id || index}
+                        to={`/product/${product._id}`}
                         className="group relative block bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
                     >
-                        {/* Image Section */}
+                        {/* ---------- Image Section ---------- */}
                         <div className="relative">
                             <img
-                                src={product.img}
+                                src={
+                                    product.images?.[0]?.url ||
+                                    "/placeholder.jpg"
+                                }
                                 alt={product.name}
-                                className="w-full h-[350px] object-cover transition-transform duration-700 group-hover:scale-105"
+                                className="w-full h-[240px] sm:h-[300px] md:h-[340px] lg:h-[380px] object-cover transition-transform duration-700 group-hover:scale-105"
                             />
 
-                            {/* Overlay */}
+                            {/* Overlay on Hover */}
                             <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-500">
-                                <span className="bg-white text-gray-900 font-medium px-4 py-2 rounded-full text-sm">
+                                <span className="bg-white text-gray-900 font-medium px-4 py-1.5 rounded-full text-xs sm:text-sm">
                                     View Details
                                 </span>
                             </div>
 
-                            {/* Tags */}
+                            {/* Tags (New / Sale / Custom) */}
                             <div className="absolute top-3 left-3 flex flex-wrap gap-2">
-                                {product.tag && (
-                                    <span className="bg-white/90 text-gray-700 text-xs font-semibold px-2 py-1 rounded">
-                                        {product.tag}
+                                {product.isNew && (
+                                    <span className="bg-white/90 text-gray-700 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded">
+                                        NEW
                                     </span>
                                 )}
-                                {product.extra && (
-                                    <span className="bg-pink-100 text-pink-700 text-xs font-semibold px-2 py-1 rounded">
-                                        {product.extra}
+                                {product.isSale && (
+                                    <span className="bg-pink-100 text-pink-700 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded">
+                                        SALE
+                                    </span>
+                                )}
+                                {product.tag && (
+                                    <span className="bg-white/90 text-gray-700 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded">
+                                        {product.tag}
                                     </span>
                                 )}
                             </div>
                         </div>
 
-                        {/* Details Section */}
-                        <div className="p-4">
-                            <h3 className="text-sm font-medium text-gray-800 mb-1 line-clamp-1">
+                        {/* ---------- Details Section ---------- */}
+                        <div className="p-3 sm:p-4">
+                            {/* Product Name */}
+                            <h3 className="text-[13px] sm:text-sm font-medium text-gray-800 mb-1 line-clamp-1">
                                 {product.name}
                             </h3>
 
-                            <div className="flex items-center text-yellow-500 text-sm mb-1">
-                                {"★".repeat(Math.floor(product.rating))}
-                                {product.rating % 1 !== 0 ? "½" : ""}
-                                <span className="text-gray-500 ml-2 text-xs">
-                                    ({product.reviews} reviews)
+                            <div className="flex items-center text-yellow-500 text-sm mb-1"> {"★".repeat(Math.floor(product.rating || 0))} {product.rating % 1 !== 0 ? "½" : ""} <span className="text-gray-600 ml-2"> {product.numReviews || 0} reviews </span> </div>
+
+                            {/* Price Section */}
+                            <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                                <span className="text-gray-900 font-semibold text-sm sm:text-base">
+                                    ₹
+                                    {product.discountPrice
+                                        ? product.discountPrice.toLocaleString()
+                                        : product.price?.toLocaleString()}
                                 </span>
+                                {product.discountPrice && (
+                                    <span className="text-gray-400 line-through text-xs sm:text-sm">
+                                        ₹{product.price?.toLocaleString()}
+                                    </span>
+                                )}
+                                {product.discount && (
+                                    <span className="text-red-500 text-xs sm:text-sm font-medium">
+                                        ({product.discount}% OFF)
+                                    </span>
+                                )}
                             </div>
 
-                            <div className="flex items-center space-x-2">
-                                <span className="text-gray-400 line-through text-sm">
-                                    ₹{product.originalPrice.toLocaleString()}
-                                </span>
-                                <span className="text-gray-900 font-semibold">
-                                    ₹{product.discountedPrice.toLocaleString()}
-                                </span>
-                                <span className="text-pink-600 text-xs font-medium">
-                                    {product.discount}
-                                </span>
-                            </div>
+                            {/* Sizes */}
+                            {product.sizes && (
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                    {product.sizes.map((size, i) => (
+                                        <span
+                                            key={i}
+                                            className="border border-gray-300 text-gray-700 text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded-md"
+                                        >
+                                            {size}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </Link>
                 ))}
@@ -144,4 +108,4 @@ const ProductGrid = () => {
     );
 };
 
-export default ProductGrid;
+export default Collection;

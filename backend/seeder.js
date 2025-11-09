@@ -22,7 +22,7 @@ const seedData = async () => {
             role: "admin",
         });
 
-        const userID = createUser.id;
+        const userID = createUser._id;
 
         const sampleProducts = prodcuts.map((product) => {
             return { ...product, user: userID };

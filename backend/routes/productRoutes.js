@@ -60,7 +60,6 @@ router.post("/", protect, admin, async (req, res) => {
     }
 });
 
-//Updating product
 router.put("/:id", protect, admin, async (req, res) => {
     try {
         const {
@@ -84,7 +83,7 @@ router.put("/:id", protect, admin, async (req, res) => {
             sku,
         } = req.body;
 
-        //Find product by id
+
         const product = await Product.findById(req.params.id);
 
         if (product) {
@@ -118,7 +117,7 @@ router.put("/:id", protect, admin, async (req, res) => {
     }
 })
 
-//Delete prodcut
+
 router.delete("/:id", protect, admin, async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -135,43 +134,56 @@ router.delete("/:id", protect, admin, async (req, res) => {
     }
 })
 
-//
 router.get("/", async (req, res) => {
     try {
-        const { collection, size, color, minPrice, maxPrice, sortBy, search, category, material, brand, limit } = req.query;
+        const { color, size, material, brand, collection, search, minPrice, maxPrice, sortBy, limit } = req.query;
+        const query = {};
 
-        let query = {};
-        //filter logic
-        if (collection && collection.toLocaleLowerCase() !== "all") {
-            query.collection = collection;
-        }
-        if (category && category.toLocaleLowerCase() !== "all") {
-            query.category = category;
-        }
+
         if (material) {
-            query.material = { $in: material.split(".") };
+            query.material = { $in: material.split(",") };
         }
+
         if (brand) {
-            query.brand = { $in: brand.split(".") };
+            query.brand = { $in: brand.split(",") };
         }
-        if (size) {
-            query.size = { $in: size.split(".") };
-        }
+
         if (color) {
-            query.color = { $in: [color] };
+            query.colors = { $in: color };
         }
+
+        if (size) {
+            query.sizes = { $in: size.split(",") };
+        }
+
+        if (
+            collection &&
+            typeof collection === "string" &&
+            collection.trim() !== "" &&
+            collection.toLowerCase() !== "all"
+        ) {
+            const collections = collection
+                .split(",")
+                .map(col => col.trim())
+                .filter(Boolean)
+                .map(col => new RegExp(col, "i"));
+            if (collections.length > 0) query.collections = { $in: collections };
+        }
+
         if (minPrice || maxPrice) {
             query.price = {};
-            if (minPrice) query.price.$gte = Number(minPrice)
-            if (maxPrice) query.price.$lte = Number(maxPrice)
+            if (minPrice) query.price.$gte = Number(minPrice);
+            if (maxPrice) query.price.$lte = Number(maxPrice);
         }
+
 
         if (search) {
             query.$or = [
                 { name: { $regex: search, $options: "i" } },
-                { description: { $regex: search, $options: "i" } }
+                { description: { $regex: search, $options: "i" } },
             ]
-        }
+        };
+
         let sort = {};
         if (sortBy) {
             switch (sortBy) {
@@ -181,8 +193,8 @@ router.get("/", async (req, res) => {
                 case "priceDesc":
                     sort = { price: -1 };
                     break;
-                case "popularity":
-                    sort = { rating: -1 };
+                case "populaity":
+                    sort = { price: +1 };
                     break;
                 default:
                     break;
@@ -190,13 +202,13 @@ router.get("/", async (req, res) => {
         }
 
         let products = await Product.find(query).sort(sort).limit(Number(limit) || 0);
-        res.json(products);
 
+        res.json(products);
     } catch (error) {
-        console.error(error);
-        res.status(500).json("Server Error");
+        res.status(500).json({ message: "Server Error", error: error.message });
     }
-})
+});
+
 
 router.get("/best-seller", async (req, res) => {
     try {
@@ -212,11 +224,13 @@ router.get("/best-seller", async (req, res) => {
     }
 })
 
-//New Arrivals
 router.get("/new-arrivals", async (req, res) => {
     try {
-        const newArrivals = await Product.find().sort({ createdAt: -1 }).limit(10);
+        const newArrivals = await Product.find().sort({ createdAt: -1 }).limit(0);
+
         res.json(newArrivals);
+
+
     } catch (error) {
         console.error(error);
         res.status(500).json("Server Error");
@@ -224,7 +238,6 @@ router.get("/new-arrivals", async (req, res) => {
 })
 
 
-//product by id
 router.get("/:id", async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -240,7 +253,6 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-//similar products
 router.get("/similar/:id", async (req, res) => {
     const { id } = req.params;
 
@@ -262,9 +274,5 @@ router.get("/similar/:id", async (req, res) => {
     }
 
 })
-
-
-
-
 
 module.exports = router;

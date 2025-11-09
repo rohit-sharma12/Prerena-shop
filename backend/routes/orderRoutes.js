@@ -4,9 +4,9 @@ const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.get("/my-orders", protect, async (req, res) => {
+router.get("/profile", protect, async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.user.id }).sort({
+        const orders = await Order.find({ user: req.user._id }).sort({
             createdAt: -1,
         });
         res.json(orders);
@@ -19,6 +19,7 @@ router.get("/my-orders", protect, async (req, res) => {
 //Get order details by id
 router.get("/:id", protect, async (req, res) => {
     try {
+
         const order = await Order.findById(req.params.id).populate(
             "user",
             "name email"

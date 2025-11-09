@@ -3,20 +3,24 @@ import { Menu, X, ShoppingCart, UserCog } from "lucide-react";
 import { Link } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import CartDrawer from "../Layout/CartDrawer";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const cartItemCount = 5;
+    const { cart } = useSelector((state) => state.cart);
+    const { user } = useSelector((state) => state.auth);
+    const cartItemCount = cart?.products?.reduce((total, product) => total + product.quantity, 0) || 0;
+
 
     const toggleCartDrawer = () => setDrawerOpen(!drawerOpen);
 
     const navItems = [
-        { name: "Saris", to: "#" },
-        { name: "Suits", to: "#" },
+        { name: "Saris", to: "/collections/all?category=Sarees" },
+        { name: "Suits", to: "/collections/all?category=Suits" },
         { name: "Collections", to: "/collections/all" },
-        { name: "Bottom", to: "#" },
-        { name: "About", to: "#" },
+        { name: "Bottom", to: "/collection/all?category=Bottom" },
+        { name: "About", to: "" },
     ];
 
     return (
@@ -51,12 +55,15 @@ const Navbar = () => {
 
                         {/* 🔹 Right Icons (Always visible) */}
                         <div className="flex items-center space-x-3 sm:space-x-5">
-                            <Link
-                                to="/admin"
-                                className="block bg-black px-2 py-2 rounded text-sm text-white"
-                            >
-                                Admin
-                            </Link>
+                            {user && user.role === "admin" && (
+                                <Link
+                                    to="/admin"
+                                    className="block bg-black px-2 py-2 rounded text-sm text-white"
+                                >
+                                    Admin
+                                </Link>
+                            )}
+
                             <Link
                                 to="/profile"
                                 className="text-gray-700 hover:text-indigo-600 transition"
@@ -80,12 +87,6 @@ const Navbar = () => {
                             <div className="hidden sm:flex w-40 md:w-50">
                                 <Searchbar />
                             </div>
-
-                            {/* <button className="px-2 sm:px-4 py-2 rounded-lg border border-indigo-600 text-indigo-600 font-semibold hover:bg-indigo-50 transition duration-150 text-sm sm:text-base">
-                                Login
-                            </button> */}
-
-                            {/* 🔹 Hamburger (Visible on small devices) */}
                             <button
                                 className="md:hidden text-gray-700 hover:text-indigo-600 p-2 rounded-lg transition"
                                 onClick={() => setIsOpen(!isOpen)}

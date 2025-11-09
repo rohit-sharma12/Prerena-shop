@@ -1,14 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 
-//Retreve user info and token from localStorage if available
 const userFromStorage = localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo")) : null;
 
-//Check for an existing guest ID in the localStorage or generate new One
-const initialGuestId = localStorage.getItem("guestId") || `guest_${new Date()}`;
+
+const initialGuestId = localStorage.getItem("guestId") || `guest_${new Date().getTime()}`;
 localStorage.setItem("guestId", initialGuestId);
 
-//Initial State
 const initialState = {
     user: userFromStorage,
     guestId: initialGuestId,
@@ -16,7 +14,6 @@ const initialState = {
     error: null,
 };
 
-//Async Thunk for User logic
 export const loginUser = createAsyncThunk("auth/loginUser", async (userData, { rejectWithValue }) => {
     try {
         const response = await axios.post(
@@ -33,7 +30,6 @@ export const loginUser = createAsyncThunk("auth/loginUser", async (userData, { r
 })
 
 
-//Async Thunk for User Singup
 export const signupUser = createAsyncThunk("auth/signup", async (userData, { rejectWithValue }) => {
     try {
         const response = await axios.post(
@@ -73,7 +69,7 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.user = action.payload;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
@@ -85,7 +81,7 @@ const authSlice = createSlice({
             })
             .addCase(signupUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.user = action.payload;
             })
             .addCase(signupUser.rejected, (state, action) => {
                 state.loading = false;

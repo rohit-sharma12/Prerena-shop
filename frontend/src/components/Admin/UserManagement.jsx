@@ -1,33 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Edit2, Trash2, Eye, UserPlus } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { addUser, deleteUser, fetchUsers } from "../../redux/slice/adminSlice";
 
 const UserManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [message, setMessage] = useState("");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const [users, setUsers] = useState([
-        {
-            id: 1,
-            name: "Rohit Sharma",
-            email: "rohit@example.com",
-            role: "Customer",
+    const { user } = useSelector((state) => state.auth);
+    const { users, loading, error } = useSelector((state) => state.admin);
 
-        },
-        {
-            id: 2,
-            name: "Priya Patel",
-            email: "priya@example.com",
-            role: "Customer",
+    useEffect(() => {
+        if (user && user.role !== "admin") {
+            navigate("/");
+        }
+    }, [user, navigate]);
 
-        },
-        {
-            id: 3,
-            name: "Amit Verma",
-            email: "amit@example.com",
-            role: "Admin",
-
-        },
-    ]);
+    useEffect(() => {
+        if (user && user.role === "admin") {
+            dispatch(fetchUsers())
+        }
+    }, [dispatch, user]);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -43,45 +39,33 @@ const UserManagement = () => {
             user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this user?")) {
-            setUsers(users.filter((user) => user.id !== id));
-        }
-    };
-
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleCreateUser = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
+        dispatch(addUser(formData));
 
-        if (!formData.name || !formData.email || !formData.password) {
-            setMessage("❌ Please fill all required fields!");
-            return;
-        }
-        console.log(formData);
-
-        const newUser = {
-            id: Date.now(),
-            name: formData.name,
-            email: formData.email,
-            role: formData.role,
-        };
-
-        setUsers([...users, newUser]);
         setFormData({ name: "", email: "", password: "", role: "Customer" });
         setMessage("✅ User created successfully!");
 
         setTimeout(() => setMessage(""), 3000);
+
+    };
+
+    const handleDelete = (userId) => {
+        if (window.confirm("Are you sure you want to delete this user?")) {
+            dispatch(deleteUser(userId));
+        }
     };
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
-            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                 <h1 className="text-2xl font-semibold text-gray-800">User Management</h1>
+                {loading && <p>Loading...</p>}
+                {Error && <p>{error}</p>}
                 <div className="relative mt-4 sm:mt-0">
                     <Search
                         size={18}
@@ -114,7 +98,7 @@ const UserManagement = () => {
                 )}
 
                 <form
-                    onSubmit={handleCreateUser}
+                    onSubmit={handleSubmit}
                     className="grid grid-cols-1 sm:grid-cols-2 gap-4"
                 >
                     <div>
@@ -195,14 +179,14 @@ const UserManagement = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUsers.length > 0 ? (
+                        {filteredUsers?.length > 0 ? (
                             filteredUsers.map((user) => (
                                 <tr
-                                    key={user.id}
+                                    key={user._id}
                                     className="hover:bg-gray-50 transition-all border-b"
                                 >
-                                    <td className="py-3 px-4">{user.name}</td>
-                                    <td className="py-3 px-4">{user.email}</td>
+                                    <td className="py-3 px-4">{user?.name}</td>
+                                    <td className="py-3 px-4">{user?.email}</td>
                                     <td className="py-3 px-4">
                                         <span
                                             className={`px-2 py-1 rounded-full text-xs font-medium ${user.role === "Admin"
@@ -210,13 +194,13 @@ const UserManagement = () => {
                                                 : "bg-gray-100 text-gray-700"
                                                 }`}
                                         >
-                                            {user.role}
+                                            {user?.role}
                                         </span>
                                     </td>
 
                                     <td className="py-3 px-4 text-center space-x-3">
                                         <button
-                                            onClick={() => handleDelete(user.id)}
+                                            onClick={() => handleDelete(user._id)}
                                             className="text-red-500 hover:text-red-700"
                                             title="Delete"
                                         >

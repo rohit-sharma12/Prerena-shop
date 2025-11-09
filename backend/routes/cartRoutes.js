@@ -1,18 +1,23 @@
 const express = require("express");
 const Cart = require("../models/Cart")
 const Product = require("../models/Product");
-const {  protect } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 const getCart = async (userId, guestId) => {
-    if (userId) {
-        return await Cart.findOne({ user: userId });
-    } else if (guestId) {
-        return await Cart.findOne({ guestId });
-    }
-    return null;
+    if (!userId && !guestId) return null;
+
+    const cart = await Cart.findOne({
+        $or: [
+            userId ? { user: userId } : {},
+            guestId ? { guestId } : {}
+        ]
+    });
+
+    return cart;
 };
+
 
 router.post("/", async (req, res) => {
     const { productId, quantity, size, color, guestId, userId } = req.body;
@@ -110,7 +115,7 @@ router.delete("/", async (req, res) => {
     try {
         let cart = await getCart(userId, guestId);
 
-        if (!cart) return res.status(400).json({ message: "Cart not found" });
+        if (!cart) return res.status(404).json({ message: "Cart not found" });
 
         const productIndex = cart.products.findIndex(
             (p) => p.productId.toString() === productId && p.size === size && p.color === color
@@ -122,6 +127,7 @@ router.delete("/", async (req, res) => {
             cart.totalPrice = cart.products.reduce((acc, item) => acc + item.price * item.quantity, 0);
             await cart.save();
             return res.status(200).json(cart);
+
         } else {
             return res.status(404).json({ message: "Product not found" });
         }
@@ -153,15 +159,12 @@ router.post("/merge", protect, async (req, res) => {
     const { guestId } = req.body;
 
     try {
-        console.log('Cart merge requested', { guestId, userId: req.user && req.user.id });
         const guestCart = await Cart.findOne({ guestId });
-        console.log('Found guestCart:', !!guestCart);
-        const userCart = await Cart.findOne({ user: req.user.id });
-        console.log('Found userCart:', !!userCart);
+        const userCart = await Cart.findOne({ user: req.user._id });
 
         if (guestCart) {
             if (guestCart.products.length === 0) {
-                return res.status(404).json({ message: "Guest cart is empty" })
+                return res.status(400).json({ message: "Guest cart is empty" })
             }
             if (userCart) {
                 guestCart.products.forEach((guestItem) => {
@@ -189,7 +192,7 @@ router.post("/merge", protect, async (req, res) => {
                 }
                 res.status(200).json(userCart);
             } else {
-                guestCart.user = req.user.id;
+                guestCart.user = req.user._id;
                 guestCart.guestId = undefined;
                 await guestCart.save();
 
@@ -199,14 +202,12 @@ router.post("/merge", protect, async (req, res) => {
             if (userCart) {
                 return res.status(200).json(userCart)
             }
-            res.status(400).json({ message: "Guest cart not found" })
+            res.status(404).json({ message: "Guest cart not found" })
         }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error" });
     }
 })
-
-
 
 module.exports = router;
