@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/", protect, admin, async (req, res) => {
     try {
-        const orders = await Order.find({}).populate("user", "name email").sort({ createdAt: -1 });;
+        const orders = await Order.find({}).populate("user", "name email");
         res.json(orders);
     } catch (error) {
         console.error(error);

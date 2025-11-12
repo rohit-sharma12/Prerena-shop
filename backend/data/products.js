@@ -44,8 +44,11 @@ const products = [
             {
                 url: "https://www.soch.com/media/catalog/product/b/e/beige_tissue_floral_print_suit_set_with_beads_womens_soch-ewa5cd22269a_01.jpg?width=440&height=660g",
                 altText: "Emerald Green Mirror Work Sharara Set",
-
             },
+            {
+                url: "https://www.soch.com/media/catalog/product/b/e/beige_tissue_floral_print_suit_set_with_beads_womens_soch-ewa5cd22269a_04.jpg?width=1200",
+                altText: "Emerald Green Mirror Work Sharara Set",
+            }
         ],
         isFeatured: false,
         isPublished: true,
@@ -74,6 +77,10 @@ const products = [
                 url: "https://www.bunaai.com/cdn/shop/files/Festive-6305.jpg?v=1726891510",
                 altText: "Rani Pink Banarasi Saree",
             },
+            {
+                url: "https://www.bunaai.com/cdn/shop/files/Festive-6349.jpg?v=1726891510",
+                altText: "Rani Pink Banarasi Saree",
+            },
         ],
         isFeatured: false,
         isPublished: true,
@@ -99,8 +106,12 @@ const products = [
         images: [
             {
                 url: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8259.jpg?v=1752749739",
-                altText: "Yellow Georgette Gota Patti Suit",
+                altText: "Gajri Cotton Suit Set",
 
+            },
+            {
+                url: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8276.jpg?v=1752749739",
+                altText: "Gajri Cotton Suit Set",
             },
         ],
         isFeatured: false,
@@ -129,8 +140,11 @@ const products = [
         images: [
             {
                 url: "https://www.soch.com/media/catalog/product/g/r/grey_organza_solid_saree_with_mirror_and_stone_womens_soch-srevebl119533e_01.jpg?width=454&optimize=medium",
-                altText: "Peach Organza Saree with Zari Border",
-
+                altText: "Grey Organza Solid Saree With Mirror And Stone",
+            },
+            {
+                url: "https://www.soch.com/media/catalog/product/g/r/grey_organza_solid_saree_with_mirror_and_stone_womens_soch-srevebl119533e_04.jpg?width=1200",
+                altText: "Grey Organza Solid Saree With Mirror And Stone",
             },
         ],
         isFeatured: false,
@@ -159,8 +173,11 @@ const products = [
         images: [
             {
                 url: "https://www.soch.com/media/catalog/product/t/e/teal_green_organza_saree_with_stone_work_womens_soch-srevebl120757a_01.jpg?width=820",
-                altText: "Lavender Net Embroidered Suit",
-
+                altText: "Teal Blue Organza Saree With Stone Work",
+            },
+            {
+                url: "https://www.soch.com/media/catalog/product/t/e/teal_green_organza_saree_with_stone_work_womens_soch-srevebl120757a_03.jpg?width=1200",
+                altText: "Teal Blue Organza Saree With Stone Work",
             },
         ],
         isFeatured: false,
@@ -183,18 +200,18 @@ const products = [
         category: "Suits",
         brand: "Soch",
         sizes: ["S", "M", "L", "XL"],
-        colors: ["Blush Pink", "Rose Gold"],
+        colors: ["Pink", "Red"],
         collections: "Festive Collection",
         material: "Georgette",
         images: [
             {
                 url: "https://www.soch.com/media/catalog/product/w/i/wine_chanderi_woven_design_saree_with_tassels_womens_soch-srevjq114184a_01.jpg?width=820",
-                altText: "Blush Aari Work Anarkali Suit Set Front View",
+                altText: "Wine Chanderi Woven Design Saree With Tassels",
 
             },
             {
-                url: "https://www.soch.com/media/catalog/product/w/i/wine_chanderi_woven_design_saree_with_tassels_womens_soch-srevjq114184a_01.jpg?width=820",
-                altText: "Blush Aari Work Anarkali Suit Set Back View",
+                url: "https://www.soch.com/media/catalog/product/w/i/wine_chanderi_woven_design_saree_with_tassels_womens_soch-srevjq114184a_04.jpg?width=1200",
+                altText: "Wine Chanderi Woven Design Saree With Tassels",
 
             },
         ],
@@ -223,8 +240,11 @@ const products = [
         images: [
             {
                 url: "https://www.soch.com/media/catalog/product/l/a/lavender_fendy_georgette_embroidered_saree_with_stone_work_womens_soch-srevemb125971c_01.jpg?width=820",
-                altText: "Ivory Organza Saree with Floral Embroidery",
-
+                altText: "Lavender Fendy Georgette Embroidered Saree With Stone Work",
+            },
+            {
+                url: "https://www.soch.com/media/catalog/product/l/a/lavender_fendy_georgette_embroidered_saree_with_stone_work_womens_soch-srevemb125971c_03.jpg?width=1200",
+                altText: "Lavender Fendy Georgette Embroidered Saree With Stone Work",
             },
         ],
         isFeatured: false,
@@ -255,8 +275,11 @@ const products = [
             {
                 url: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-8687.jpg?v=1752749695",
                 altText: "Pastel Blue Chikankari Kurta Set",
-
             },
+            {
+                url: "https://www.bunaai.com/cdn/shop/files/BunaaiSuit-9046.jpg?v=1751957284",
+                altText: "Pastel Blue Chikankari Kurta Set",
+            }
         ],
         isFeatured: false,
         isPublished: true,
@@ -287,6 +310,10 @@ const products = [
                 altText: "Emerald Green Mirror Work Sharara Set",
 
             },
+            {
+                url: "https://www.bunaai.com/cdn/shop/files/Bunaai-00821.jpg?v=1741245824",
+                altText: "Emerald Green Mirror Work Sharara Set",
+            },
         ],
         isFeatured: false,
         isPublished: true,
@@ -315,8 +342,11 @@ const products = [
             {
                 url: "https://www.bunaai.com/cdn/shop/files/SV-20240716-4216.jpg?v=1722084884",
                 altText: "Rani Pink Banarasi Saree",
-
             },
+            {
+                url: "https://www.bunaai.com/cdn/shop/files/SV-20240716-4232.jpg?v=1722084902",
+                altText: "Rani Pink Banarasi Saree"
+            }
         ],
         isFeatured: false,
         isPublished: true,
@@ -338,14 +368,17 @@ const products = [
         category: "Suits",
         brand: "Bunaai",
         sizes: ["S", "M", "L", "XL"],
-        colors: ["Yellow", "Gold"],
+        colors: ["Yellow", "purple"],
         collections: "Festive Glow",
         material: "Silk",
         images: [
             {
                 url: "https://www.bunaai.com/cdn/shop/files/Indianwearjan24-5432.jpg?v=1751446935",
                 altText: "Yellow Georgette Gota Patti Suit",
-
+            },
+            {
+                url: "https://www.bunaai.com/cdn/shop/files/Indianwearjan24-5447.jpg?v=1751446935",
+                altText: "Yellow Georgette Gota Patti Suit",
             },
         ],
         isFeatured: false,
@@ -368,13 +401,17 @@ const products = [
         category: "Sarees",
         brand: "Bunaai",
         sizes: ["Free Size"],
-        colors: ["Peach", "Gold"],
+        colors: ["Purple", "Pink"],
         collections: "Elegant Drapes",
         material: "Organza",
         images: [
             {
                 url: "https://www.bunaai.com/cdn/shop/files/Indianwearjan24-6993.jpg?v=1751446909",
-                altText: "Peach Organza Saree with Zari Border",
+                altText: "Carnation Tissue Saree",
+            },
+            {
+                url: "https://www.bunaai.com/products/carnation-tissue-saree?_pos=1&_sid=d21e67615&_ss=r",
+                altText: "Carnation Tissue Saree",
             },
         ],
         isFeatured: false,
@@ -397,7 +434,7 @@ const products = [
         category: "Suits",
         brand: "Aira Designs",
         sizes: ["S", "M", "L", "XL"],
-        colors: ["Lavender", "Silver"],
+        colors: ["red", "black"],
         collections: "Evening Glam",
         material: "Georgette",
         images: [
@@ -405,6 +442,10 @@ const products = [
                 url: "https://www.bunaai.com/cdn/shop/files/Indianwearjan24-3722.jpg?v=1706938206",
                 altText: "Lavender Net Embroidered Suit",
             },
+            {
+                url: "https://www.bunaai.com/cdn/shop/files/Indianwearjan24-3727.jpg?v=1706938208",
+                altText: "Lavender Net Embroidered Suit",
+            }
         ],
         isFeatured: false,
         isPublished: true,
@@ -424,7 +465,7 @@ const products = [
         category: "Suits",
         brand: "Bunaai",
         sizes: ["S", "M", "L", "XL"],
-        colors: ["Orange", "Gold"],
+        colors: ["Orange", "red"],
         collections: "Festive Collection",
         material: "Georgette",
 
@@ -468,6 +509,10 @@ const products = [
                 url: "https://www.bunaai.com/cdn/shop/files/SV-20240716-4246.jpg?v=1722084962",
                 altText: "Ivory Organza Saree with Floral Embroidery",
             },
+            {
+                url: "https://www.bunaai.com/cdn/shop/files/SV-20240716-4252.jpg?v=1722084933",
+                altText: "Ivory Organza Saree with Floral Embroidery",
+            }
         ],
         isFeatured: false,
         isPublished: true,

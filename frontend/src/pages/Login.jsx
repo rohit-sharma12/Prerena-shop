@@ -12,7 +12,7 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    const { user, guestId } = useSelector((state) => state.auth);
+    const { user, guestId, loading } = useSelector((state) => state.auth);
     const { cart } = useSelector((state) => state.cart);
 
 
@@ -88,7 +88,7 @@ const Login = () => {
                             type="submit"
                             className="w-full bg-black hover:bg-gray-700 cursor-pointer text-white py-3 rounded-xl font-semibold tracking-wide shadow-md hover:shadow-lg transition-all duration-300"
                         >
-                            Log In
+                            {loading ? "loading..." : "Log In"}
                         </button>
                     </form>
 

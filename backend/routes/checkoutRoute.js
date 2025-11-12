@@ -9,6 +9,8 @@ const { protect } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 router.post("/", protect, async (req, res) => {
+
+    console.log("🧩 Incoming user from token:", req.user); 
     const { checkoutItems, shippingAddress, paymentMethod, totalPrice } = req.body;
 
     if (!checkoutItems || checkoutItems.length === 0) {

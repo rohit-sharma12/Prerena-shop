@@ -11,7 +11,6 @@ export const fetchAllOrders = createAsyncThunk(
                     Authorization: `Bearer ${localStorage.getItem('userToken')}`,
                 },
             });
-
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);

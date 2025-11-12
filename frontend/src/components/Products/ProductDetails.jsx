@@ -27,7 +27,6 @@ const ProductDetails = ({ productId }) => {
         }
     }, [dispatch, productFetchId]);
 
-    // Update main image when product data is loaded
     useEffect(() => {
         if (selectedProduct?.images?.length > 0) {
             setMainImage(selectedProduct.images[0].url);
@@ -85,16 +84,19 @@ const ProductDetails = ({ productId }) => {
                     <div className="flex flex-col md:flex-row">
                         <div className="hidden md:flex flex-col space-y-4 mr-6 max-h-[550px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300">
                             {selectedProduct.images.map((image, index) => (
-                                <img
-                                    key={index}
-                                    src={image.url}
-                                    alt={image.altText || `Thumbnail ${index}`}
-                                    className={`w-28 h-28 object-cover rounded-lg cursor-pointer border transition-transform duration-300 hover:scale-105 ${mainImage === image.url ? "border-black" : "border-gray-300"
-                                        }`}
-                                    onClick={() => setMainImage(image.url)}
-                                />
+                                <>
+                                    <img
+                                        key={index}
+                                        src={image.url}
+                                        alt={image.altText || `Thumbnail ${index}`}
+                                        className={`w-28 h-28 object-cover rounded-lg cursor-pointer border transition-transform duration-300 hover:scale-105 ${mainImage === image.url ? "border-black" : "border-gray-300"
+                                            }`}
+                                        onClick={() => setMainImage(image.url)}
+                                    />
+                                </>
                             ))}
                         </div>
+
 
                         {/* Main Product Image */}
                         <div className="md:w-1/2 flex justify-center items-center">
@@ -104,6 +106,7 @@ const ProductDetails = ({ productId }) => {
                                 className="w-full max-w-[600px] h-[600px] object-cover rounded-2xl shadow-md transition-transform duration-500 hover:scale-105"
                             />
                         </div>
+
 
                         {/* Mobile Thumbnails */}
                         <div className="md:hidden flex overflow-x-auto space-x-4 mb-6 scrollbar-thin scrollbar-thumb-gray-300">
@@ -116,8 +119,10 @@ const ProductDetails = ({ productId }) => {
                                         }`}
                                     onClick={() => setMainImage(image.url)}
                                 />
+
                             ))}
                         </div>
+
 
                         {/* {Right section} */}
                         <div className="md:w-1/2 md:ml-10">

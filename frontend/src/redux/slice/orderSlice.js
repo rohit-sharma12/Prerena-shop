@@ -11,6 +11,8 @@ export const fetchUserOrders = createAsyncThunk("orders/fechUserOrders", async (
                 },
             }
         );
+        console.log(response);
+        
         return response.data;
     } catch (error) {
         return  rejectWithValue(error.response.data );
